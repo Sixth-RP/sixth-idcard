@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ID Card</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+        }
+
+        #idcard-container {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -60%);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        .idcard-header {
+            text-align: center;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .idcard-header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .idcard-header p {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .idcard-body {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .idcard-field {
+            margin-bottom: 15px;
+        }
+
+        .idcard-field label {
+            display: block;
+            font-size: 11px;
+            color: #666;
+            text-transform: uppercase;
+            margin-bottom: 3px;
+            font-weight: bold;
+        }
+
+        .idcard-field span {
+            display: block;
+            font-size: 16px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .idcard-photo {
+            width: 80px;
+            height: 80px;
+            background: #667eea;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 36px;
+            font-weight: bold;
+        }
+
+        .citizen-id {
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            font-family: monospace;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="idcard-container">
+        <div class="idcard-header">
+            <h1>IDENTIFICATION CARD</h1>
+            <p>State of San Andreas</p>
+        </div>
+        <div class="idcard-body">
+            <div class="idcard-photo" id="photo-placeholder"></div>
+            
+            <div class="idcard-field">
+                <label>Full Name</label>
+                <span id="fullname"></span>
+            </div>
+            
+            <div class="idcard-field">
+                <label>Date of Birth</label>
+                <span id="birthdate"></span>
+            </div>
+            
+            <div class="idcard-field">
+                <label>Gender</label>
+                <span id="gender"></span>
+            </div>
+            
+            <div class="idcard-field">
+                <label>Nationality</label>
+                <span id="nationality"></span>
+            </div>
+            
+            <div class="citizen-id">
+                <label>CITIZEN ID</label>
+                <div id="citizenid"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener('message', function(event) {
+            const data = event.data;
+            
+            if (data.type === "showIDCard") {
+                const info = data.data;
+                
+                // Set initial of name in photo
+                const initial = info.firstname.charAt(0) + info.lastname.charAt(0);
+                document.getElementById('photo-placeholder').textContent = initial;
+                
+                // Set all fields
+                document.getElementById('fullname').textContent = info.firstname + ' ' + info.lastname;
+                document.getElementById('birthdate').textContent = info.birthdate;
+                document.getElementById('gender').textContent = info.gender;
+                document.getElementById('nationality').textContent = info.nationality;
+                document.getElementById('citizenid').textContent = info.citizenid;
+                
+                // Show the card
+                document.getElementById('idcard-container').style.display = 'block';
+            } else if (data.type === "hideIDCard") {
+                document.getElementById('idcard-container').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
